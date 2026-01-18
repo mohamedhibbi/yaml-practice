@@ -7,10 +7,6 @@ This repository contains YAML practice files and examples for learning and exper
 - Practice YAML for configuration files (e.g., Kubernetes, Ansible, CI/CD)
 - Keep a personal reference of YAML patterns and examples
 
-## Files
-
-- `file.tst` — a test file (replace with actual YAML examples later)
-- Add more YAML practice files as you go
 
 ## Usage
 
