@@ -1,0 +1,14 @@
+version: '3' 
+services:                          # services = containers 
+  database:
+    image: mysql                   #  pull it from DockerHub
+    container_name: test1          #  name of the container
+    volumes:
+      -hostpath:containerPath      # host volume
+      -volumeName:containerPath    # Mount bind 
+  frontend:
+    build: .
+    ports:
+      -"3000:5000"
+  volumes:
+    volumeName: {}
