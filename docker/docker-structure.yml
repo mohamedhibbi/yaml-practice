@@ -1,14 +1,47 @@
-version: '3' 
-services:                          # services = containers 
+version: "3.9"   # Docker Compose file format version
+
+services:
+  # =========================
+  # MySQL Database Service
+  # =========================
   database:
-    image: mysql                   #  pull it from DockerHub
-    container_name: test1          #  name of the container
+    image: mysql:8.0                # Official MySQL image from Docker Hub
+    container_name: mysql_db         # Custom container name
+    restart: always                 # Restart container if it stops
+
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass # Root password (change in production)
+      MYSQL_DATABASE: app_db        # Default database name
+      MYSQL_USER: app_user          # Database user
+      MYSQL_PASSWORD: app_pass      # Database user password
+
     volumes:
-      -hostpath:containerPath      # host volume
-      -volumeName:containerPath    # Mount bind 
-  frontend:
-    build: .
+      # Bind mount (host path -> container path)
+      - ./db_data:/var/lib/mysql
+
+      # Named volume (managed by Docker)
+      # - mysql_data:/var/lib/mysql
+
     ports:
-      -"3000:5000"
-  volumes:
-    volumeName: {}
+      - "3306:3306"                 # Expose MySQL port (optional)
+
+  # =========================
+  # Frontend Application
+  # =========================
+  frontend:
+    build: .                        # Build image from Dockerfile in current dir
+    container_name: frontend_app
+    restart: always
+
+    ports:
+      - "3000:5000"                 # Host:Container (access app on localhost:3000)
+
+    depends_on:
+      - database                    # Start database before frontend
+
+# =========================
+# Volumes Definition
+# =========================
+volumes:
+  mysql_data: {}                    # Named volume definition
+
