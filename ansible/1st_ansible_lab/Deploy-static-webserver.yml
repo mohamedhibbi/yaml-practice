@@ -1,0 +1,46 @@
+---
+- name: Setting Up Environment 
+  hosts: production
+  tasks:
+    - name: installing httpd
+      yum:
+        name: httpd
+        state: latest
+    - name: installing firewalld
+      yum:
+        name: firewalld
+        state: latest
+    - name: httpd is up and running 
+      service:
+        name: httpd
+        enabled: true
+        state: started 
+    - name: firewalld is up and running 
+      service:
+        name: firewalld
+        enabled: yes
+        state: started
+    - name: adding content to index.html
+      copy:
+        content: "My first Web Server on Ansible"
+        dest: /var/www/html/index.html
+    - name: restart httpd 
+      service:
+        name: httpd
+        state: restarted
+    - name: adding http to firewall configuration
+      firewalld:
+        state: enabled 
+        permanent: true 
+        immidiate: true
+        service: http 
+
+- name: verifying Webserver is working 
+  hosts: server1 
+  tasks:
+    - name: connect to webserver on managenode1 
+      uri:
+         url: http://server1
+         return_content: yes
+         status_code: 200
+          
